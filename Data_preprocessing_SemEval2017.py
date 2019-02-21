@@ -13,14 +13,17 @@ from nltk.stem.porter import PorterStemmer
 
 corpus = []
 for i in range(0, 20632):
-    review = re.sub('[^a-zA-Z]', ' ', X[i])
+    
+    review = re.sub("@[\w]*", '', X[i])
+    review = re.sub(r"http\S+", '', review)
+    review = re.sub('[^a-zA-Z]', ' ', review)
     review = review.lower()
     review = review.split()
     ps = PorterStemmer()
-    review = [ps.stem(word) for word in review if not word in set(stopwords.words('english'))]
+    review = [ps.stem(word) for word in review if not word in set(stopwords.words('english')) and len(word)>2]
     review = ' '.join(review)
     corpus.append(review)
 
-cvec = CountVectorizer(lowercase=False,ngram_range = (1,2),max_df = .85, max_features = 1500)
+# cvec = CountVectorizer(lowercase=False,ngram_range = (1,2),max_df = .85, max_features = 1500)
 
-X = cvec.fit_transform(corpus).toarray()
+# X = cvec.fit_transform(corpus).toarray()
